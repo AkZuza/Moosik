@@ -54,9 +54,9 @@ fun MainScreen() {
             FloatingSongActionButton(
                 modifier = Modifier.scale(1.5f).offset(x =(-10).dp, y = (-10).dp),
                 play = play,
-                onClick = { play = !play },
-                onLeftSwipe = {},
-                onRightSwipe = {}
+                togglePlayState = { play = !play },
+                onFastForward = {},
+                onFastBackward = {}
             )
         }
     ) { innerPadding ->
