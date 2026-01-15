@@ -36,7 +36,9 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
 
-private val buttonSize = 50.dp
+private val buttonSize = 60.dp
+private const val iconScale = 1.5f
+private val arrangementSpacing = 10.dp
 private val buttonModifier = Modifier.size(buttonSize)
 
 @Composable
@@ -129,7 +131,7 @@ private fun PlayPauseButton(
         Icon(
             displayIcon,
             contentDescription = null,
-            modifier = Modifier.scale(1.1f)
+            modifier = Modifier.scale(iconScale)
         )
     }
 }
@@ -157,27 +159,40 @@ private fun ExpandedSessionControlRow(
 
     Row (
         modifier = modifier,
+        horizontalArrangement = Arrangement.spacedBy(arrangementSpacing)
     ) {
         IconButton (
             modifier = buttonModifier,
             onClick = onFastBackward,
             colors = normalControlsColor,
             shape = controlsButtonShape
-        ) { Icon(fastRewindIcon, contentDescription = null) }
+        ) { Icon (
+            fastRewindIcon,
+            contentDescription = null,
+            modifier = Modifier.scale(iconScale)
+        ) }
 
         IconButton (
             modifier = buttonModifier,
             onClick = onFastForward,
             colors = normalControlsColor,
             shape = controlsButtonShape,
-        ) { Icon(fastForwardIcon, contentDescription = null) }
+        ) { Icon(
+            fastForwardIcon,
+            contentDescription = null,
+            modifier = Modifier.scale(iconScale)
+        ) }
 
         IconButton (
             modifier = buttonModifier,
             onClick = onCloseExpandedControls,
             colors = closeButtonColor,
             shape = closeButtonShape,
-        ) { Icon(closeIcon, contentDescription = null) }
+        ) { Icon(
+            closeIcon,
+            contentDescription = null,
+            modifier = Modifier.scale(iconScale)
+        ) }
     }
 }
 
@@ -204,7 +219,7 @@ private fun ExpandedSessionControlColumn(
 
     Column (
         modifier = modifier,
-        verticalArrangement = Arrangement.spacedBy(8.dp),
+        verticalArrangement = Arrangement.spacedBy(arrangementSpacing),
         horizontalAlignment = Alignment.End
     ) {
         IconButton (
@@ -212,21 +227,33 @@ private fun ExpandedSessionControlColumn(
             onClick = onFastBackward,
             colors = normalControlsColor,
             shape = controlsButtonShape
-        ) { Icon(fastRewindIcon, contentDescription = null) }
+        ) { Icon (
+            fastRewindIcon,
+            contentDescription = null,
+            modifier = Modifier.scale(iconScale)
+        ) }
 
         IconButton (
             modifier = buttonModifier,
             onClick = onFastForward,
             colors = normalControlsColor,
             shape = controlsButtonShape,
-        ) { Icon(fastForwardIcon, contentDescription = null) }
+        ) { Icon(
+            fastForwardIcon,
+            contentDescription = null,
+            modifier = Modifier.scale(iconScale)
+        ) }
 
         IconButton (
             modifier = buttonModifier,
             onClick = onCloseExpandedControls,
             colors = closeButtonColor,
             shape = closeButtonShape,
-        ) { Icon(closeIcon, contentDescription = null) }
+        ) { Icon(
+            closeIcon,
+            contentDescription = null,
+            modifier = Modifier.scale(iconScale)
+        ) }
     }
 }
 
