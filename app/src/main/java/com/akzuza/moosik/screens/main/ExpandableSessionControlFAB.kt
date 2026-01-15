@@ -26,7 +26,7 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.delay
 
 @Composable
-fun FloatingSongActionButton(
+fun ExpandableSessionControlFAB(
     modifier: Modifier = Modifier,
     play: Boolean,
     togglePlayState: () -> Unit,
@@ -94,7 +94,7 @@ fun FloatingSongActionButton(
 @Composable
 fun FloatingSongActionButtonPreview() {
     var play by remember { mutableStateOf(false) }
-    FloatingSongActionButton(
+    ExpandableSessionControlFAB(
         play = play,
         togglePlayState = { play = !play },
         onFastForward = {},

@@ -51,7 +51,7 @@ fun MainScreen() {
             )
         },
         floatingActionButton = {
-            FloatingSongActionButton(
+            ExpandableSessionControlFAB(
                 modifier = Modifier.scale(1.5f).offset(x =(-10).dp, y = (-10).dp),
                 play = play,
                 togglePlayState = { play = !play },
