@@ -188,6 +188,22 @@ fun PlayPauseButtonPreview() {
 
 @Preview
 @Composable
+fun ExpandedSessionControlRowPreview() {
+    var play by remember { mutableStateOf(false) }
+    
+    ExpandedSessionControlRow(
+        modifier = Modifier.fillMaxWidth(),
+        play = play,
+        onPlay = { play = true },
+        onPause = { play = false },
+        onFastForward = {},
+        onFastBackward = {},
+        onCloseExpandedControls = {}
+    )
+}
+
+@Preview
+@Composable
 fun FloatingSongActionButtonPreview() {
     var play by remember { mutableStateOf(false) }
     ExpandableSessionControlFAB(
