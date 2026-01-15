@@ -5,7 +5,7 @@ import androidx.compose.foundation.interaction.PressInteraction
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.FastForward
@@ -27,10 +27,13 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
+
+private val buttonSize = 36.dp
 
 @Composable
 fun ExpandableSessionControlFAB(
@@ -108,7 +111,7 @@ private fun PlayPauseButton(
     val colors = IconButtonDefaults.filledIconButtonColors(
         containerColor = MaterialTheme.colorScheme.primaryContainer
     )
-    val shape = ShapeDefaults.Medium
+    val shape = RoundedCornerShape(buttonSize)
     val displayIcon = if (play) Icons.Default.Pause else Icons.Default.PlayArrow
 
     IconButton(
@@ -149,12 +152,11 @@ private fun ExpandedSessionControlRow(
         containerColor = MaterialTheme.colorScheme.inversePrimary
     )
 
-    val controlsButtonShape = CircleShape
-    val closeButtonShape = CircleShape
+    val controlsButtonShape = RoundedCornerShape(size = buttonSize)
+    val closeButtonShape = RoundedCornerShape(size = buttonSize)
 
     Row (
         modifier = modifier,
-        horizontalArrangement = Arrangement.End,
     ) {
         IconButton (
             onClick = onFastBackward,
