@@ -52,7 +52,6 @@ fun MainScreen() {
         },
         floatingActionButton = {
             ExpandableSessionControlFAB(
-                modifier = Modifier.scale(1.5f).offset(x =(-10).dp, y = (-10).dp),
                 play = play,
                 onPlay = { play = true },
                 onPause = { play = false },
