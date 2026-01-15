@@ -29,7 +29,8 @@ import kotlinx.coroutines.delay
 fun ExpandableSessionControlFAB(
     modifier: Modifier = Modifier,
     play: Boolean,
-    togglePlayState: () -> Unit,
+    onPlay: () -> Unit,
+    onPause: () -> Unit,
     onFastForward: () -> Unit,
     onFastBackward: () -> Unit
 ) {
@@ -78,7 +79,10 @@ fun ExpandableSessionControlFAB(
         colors = colors,
         shape = shape,
         onClick = {
-            if (!openMenu) togglePlayState()
+            if (!openMenu) {
+                if (play) onPause()
+                else onPlay()
+            }
         },
         interactionSource = interactionSource
     ) {
@@ -96,7 +100,8 @@ fun FloatingSongActionButtonPreview() {
     var play by remember { mutableStateOf(false) }
     ExpandableSessionControlFAB(
         play = play,
-        togglePlayState = { play = !play },
+        onPlay = { play = true },
+        onPause = { play = false },
         onFastForward = {},
         onFastBackward = {}
     )
