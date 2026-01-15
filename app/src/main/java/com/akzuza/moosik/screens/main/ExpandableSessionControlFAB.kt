@@ -122,6 +122,58 @@ private fun PlayPauseButton(
     }
 }
 
+@Composable
+private fun ExpandedSessionControlRow(
+    modifier: Modifier = Modifier,
+    play: Boolean,
+    onPlay: () -> Unit,
+    onPause: () -> Unit,
+    onFastBackward: () -> Unit,
+    onFastForward: () -> Unit,
+    onCloseExpandedControls: () -> Unit
+) {
+    val fastForwardIcon = Icons.Default.FastForward
+    val fastRewindIcon = Icons.Default.FastRewind
+    val playIcon = Icons.Default.PlayArrow
+    val pauseIcon = Icons.Default.Pause
+
+    val normalControlsColor = IconButtonDefaults.filledIconButtonColors(
+        containerColor = MaterialTheme.colorScheme.primaryContainer
+    )
+    val closeButtonColor = IconButtonDefaults.filledIconButtonColors(
+        containerColor = MaterialTheme.colorScheme.inversePrimary
+    )
+
+    val controlsButtonShape = ShapeDefaults.Medium
+    val closeButtonShape = CircleShape
+    
+    Row (
+        modifier = modifier,
+        horizontalArrangement = Arrangement.Center,
+    ) {
+        IconButton (
+            onClick = onFastBackward,
+            colors = normalControlsColor,
+            shape = controlsButtonShape
+        ) { Icon(fastRewindIcon, contentDescription = null) }
+
+        IconButton (
+            onClick = {
+                if (play) onPause() else onPlay()
+            },
+            colors = normalControlsColor,
+            shape = controlsButtonShape
+        ) { Icon(if (play) playIcon else pauseIcon, contentDescription = null) }
+
+        IconButton (
+            onClick = onFastForward,
+            colors = normalControlsColor,
+            shape = controlsButtonShape,
+        ) { Icon(fastForwardIcon, contentDescription = null) }
+
+    }
+}
+
 @Preview
 @Composable
 fun PlayPauseButtonPreview() {
