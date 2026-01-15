@@ -94,6 +94,46 @@ fun ExpandableSessionControlFAB(
     }
 }
 
+@Composable
+private fun PlayPauseButton(
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit,
+    play: Boolean,
+    interactionSource: MutableInteractionSource
+) {
+    val colors = IconButtonDefaults.filledIconButtonColors(
+        containerColor = MaterialTheme.colorScheme.primaryContainer
+    )
+    val shape = ShapeDefaults.Medium
+    val displayIcon = if (play) Icons.Default.Pause else Icons.Default.PlayArrow
+
+    IconButton(
+        modifier = modifier,
+        colors = colors,
+        shape = shape,
+        onClick = onClick,
+        interactionSource = interactionSource
+    ) {
+        Icon(
+            displayIcon,
+            contentDescription = null,
+            modifier = Modifier.scale(1.1f)
+        )
+    }
+}
+
+@Preview
+@Composable
+fun PlayPauseButtonPreview() {
+    var play by remember { mutableStateOf(false) }
+    val interactionSource = remember { MutableInteractionSource() }
+    PlayPauseButton(
+        onClick = { play = !play },
+        play = play,
+        interactionSource = interactionSource
+    )
+}
+
 @Preview
 @Composable
 fun FloatingSongActionButtonPreview() {
