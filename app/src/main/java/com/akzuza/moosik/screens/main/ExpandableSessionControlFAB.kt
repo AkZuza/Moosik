@@ -2,8 +2,14 @@ package com.akzuza.moosik.screens.main
 
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.PressInteraction
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.FastForward
+import androidx.compose.material.icons.filled.FastRewind
 import androidx.compose.material.icons.filled.Pause
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material3.Icon
@@ -24,6 +30,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.collectLatest
 
 @Composable
 fun ExpandableSessionControlFAB(
@@ -34,14 +41,7 @@ fun ExpandableSessionControlFAB(
     onFastForward: () -> Unit,
     onFastBackward: () -> Unit
 ) {
-    val colors = IconButtonDefaults.filledIconButtonColors(
-        containerColor = MaterialTheme.colorScheme.primaryContainer
-    )
-    val shape = ShapeDefaults.Medium
     var openMenu by remember { mutableStateOf(false) }
-    val displayIcon = if (openMenu) Icons.Default.Close else
-        if (play) Icons.Default.Pause else Icons.Default.PlayArrow
-
     val interactionSource = remember { MutableInteractionSource() }
     val scope = rememberCoroutineScope()
 
@@ -49,7 +49,7 @@ fun ExpandableSessionControlFAB(
 
     // Launched effect to keep track of press events and trigger long press event
     LaunchedEffect(interactionSource) {
-        interactionSource.interactions.collect { interaction ->
+        interactionSource.interactions.collectLatest { interaction ->
             when (interaction) {
                 is PressInteraction.Press -> {
                     if (!openMenu) {
@@ -74,22 +74,26 @@ fun ExpandableSessionControlFAB(
         }
     }
 
-    IconButton(
-        modifier = modifier,
-        colors = colors,
-        shape = shape,
-        onClick = {
-            if (!openMenu) {
-                if (play) onPause()
-                else onPlay()
-            }
-        },
-        interactionSource = interactionSource
-    ) {
-        Icon(
-            displayIcon,
-            contentDescription = null,
-            modifier = Modifier.scale(1.1f)
+    if (!openMenu) {
+        PlayPauseButton(
+            modifier = modifier,
+            play = play,
+            onClick = {
+                if (!openMenu) {
+                    if (play) onPause()
+                    else onPlay()
+                }
+            },
+            interactionSource = interactionSource
+        )
+    } else {
+        ExpandedSessionControlRow (
+            play = play,
+            onPlay = onPlay,
+            onPause = onPause,
+            onFastForward = onFastForward,
+            onFastBackward = onFastBackward,
+            onCloseExpandedControls = { openMenu = false }
         )
     }
 }
@@ -136,6 +140,7 @@ private fun ExpandedSessionControlRow(
     val fastRewindIcon = Icons.Default.FastRewind
     val playIcon = Icons.Default.PlayArrow
     val pauseIcon = Icons.Default.Pause
+    val closeIcon = Icons.Default.Close
 
     val normalControlsColor = IconButtonDefaults.filledIconButtonColors(
         containerColor = MaterialTheme.colorScheme.primaryContainer
@@ -144,12 +149,12 @@ private fun ExpandedSessionControlRow(
         containerColor = MaterialTheme.colorScheme.inversePrimary
     )
 
-    val controlsButtonShape = ShapeDefaults.Medium
+    val controlsButtonShape = CircleShape
     val closeButtonShape = CircleShape
-    
+
     Row (
         modifier = modifier,
-        horizontalArrangement = Arrangement.Center,
+        horizontalArrangement = Arrangement.End,
     ) {
         IconButton (
             onClick = onFastBackward,
@@ -163,7 +168,7 @@ private fun ExpandedSessionControlRow(
             },
             colors = normalControlsColor,
             shape = controlsButtonShape
-        ) { Icon(if (play) playIcon else pauseIcon, contentDescription = null) }
+        ) { Icon(if (!play) playIcon else pauseIcon, contentDescription = null) }
 
         IconButton (
             onClick = onFastForward,
@@ -171,6 +176,11 @@ private fun ExpandedSessionControlRow(
             shape = controlsButtonShape,
         ) { Icon(fastForwardIcon, contentDescription = null) }
 
+        IconButton (
+            onClick = onCloseExpandedControls,
+            colors = closeButtonColor,
+            shape = closeButtonShape,
+        ) { Icon(closeIcon, contentDescription = null) }
     }
 }
 
