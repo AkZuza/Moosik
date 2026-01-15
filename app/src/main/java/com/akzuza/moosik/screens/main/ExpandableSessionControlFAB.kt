@@ -2,9 +2,12 @@ package com.akzuza.moosik.screens.main
 
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.PressInteraction
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
@@ -23,6 +26,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.tooling.preview.Preview
@@ -32,7 +36,8 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
 
-private val buttonSize = 36.dp
+private val buttonSize = 50.dp
+private val buttonModifier = Modifier.size(buttonSize)
 
 @Composable
 fun ExpandableSessionControlFAB(
@@ -76,25 +81,28 @@ fun ExpandableSessionControlFAB(
         }
     }
 
-    if (!openMenu) {
-        PlayPauseButton(
-            modifier = modifier,
-            play = play,
-            onClick = {
-                if (!openMenu) {
-                    if (play) onPause()
-                    else onPlay()
-                }
-            },
-            interactionSource = interactionSource
-        )
-    } else {
-        ExpandedSessionControlRow (
-            modifier = modifier,
-            onFastForward = onFastForward,
-            onFastBackward = onFastBackward,
-            onCloseExpandedControls = { openMenu = false }
-        )
+    Box (
+        modifier = modifier,
+        contentAlignment = Alignment.BottomEnd
+    ) {
+        if (!openMenu) {
+            PlayPauseButton(
+                play = play,
+                onClick = {
+                    if (!openMenu) {
+                        if (play) onPause()
+                        else onPlay()
+                    }
+                },
+                interactionSource = interactionSource
+            )
+        } else {
+            ExpandedSessionControlColumn (
+                onFastForward = onFastForward,
+                onFastBackward = onFastBackward,
+                onCloseExpandedControls = { openMenu = false }
+            )
+        }
     }
 }
 
@@ -112,7 +120,7 @@ private fun PlayPauseButton(
     val displayIcon = if (play) Icons.Default.Pause else Icons.Default.PlayArrow
 
     IconButton(
-        modifier = modifier,
+        modifier = buttonModifier,
         colors = colors,
         shape = shape,
         onClick = onClick,
@@ -151,18 +159,21 @@ private fun ExpandedSessionControlRow(
         modifier = modifier,
     ) {
         IconButton (
+            modifier = buttonModifier,
             onClick = onFastBackward,
             colors = normalControlsColor,
             shape = controlsButtonShape
         ) { Icon(fastRewindIcon, contentDescription = null) }
 
         IconButton (
+            modifier = buttonModifier,
             onClick = onFastForward,
             colors = normalControlsColor,
             shape = controlsButtonShape,
         ) { Icon(fastForwardIcon, contentDescription = null) }
 
         IconButton (
+            modifier = buttonModifier,
             onClick = onCloseExpandedControls,
             colors = closeButtonColor,
             shape = closeButtonShape,
@@ -193,20 +204,25 @@ private fun ExpandedSessionControlColumn(
 
     Column (
         modifier = modifier,
+        verticalArrangement = Arrangement.spacedBy(8.dp),
+        horizontalAlignment = Alignment.End
     ) {
         IconButton (
+            modifier = buttonModifier,
             onClick = onFastBackward,
             colors = normalControlsColor,
             shape = controlsButtonShape
         ) { Icon(fastRewindIcon, contentDescription = null) }
 
         IconButton (
+            modifier = buttonModifier,
             onClick = onFastForward,
             colors = normalControlsColor,
             shape = controlsButtonShape,
         ) { Icon(fastForwardIcon, contentDescription = null) }
 
         IconButton (
+            modifier = buttonModifier,
             onClick = onCloseExpandedControls,
             colors = closeButtonColor,
             shape = closeButtonShape,
@@ -229,8 +245,6 @@ fun PlayPauseButtonPreview() {
 @Preview
 @Composable
 fun ExpandedSessionControlRowPreview() {
-    var play by remember { mutableStateOf(false) }
-    
     ExpandedSessionControlRow(
         modifier = Modifier.fillMaxWidth(),
         onFastForward = {},
@@ -242,8 +256,6 @@ fun ExpandedSessionControlRowPreview() {
 @Preview
 @Composable
 fun ExpandedSessionControlColumnPreview() {
-    var play by remember { mutableStateOf(false) }
-
     ExpandedSessionControlColumn(
         modifier = Modifier.fillMaxWidth(),
         onFastForward = {},
