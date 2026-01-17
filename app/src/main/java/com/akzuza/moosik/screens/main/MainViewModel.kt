@@ -41,4 +41,15 @@ class MainViewModel : ViewModel() {
             }
         }
     }
+
+    private fun updateSessionElapsedDuration(elapsed: Duration) {
+        if (state.value.session == null) return
+        val session: Session = state.value.session!!
+
+        _state.update {
+            it.copy(
+                session = session.copy(elapsed = elapsed)
+            )
+        }
+    }
 }
