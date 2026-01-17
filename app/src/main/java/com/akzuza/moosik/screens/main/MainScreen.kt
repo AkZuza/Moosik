@@ -2,35 +2,34 @@ package com.akzuza.moosik.screens.main
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.scale
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.ui.NavDisplay
+import com.akzuza.moosik.entities.SessionStatus
 import com.akzuza.moosik.navigation.NavBar
 import com.akzuza.moosik.navigation.Route
+import org.koin.androidx.compose.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MainScreen() {
-    val backstack = remember { mutableStateListOf<Any>(Route.Home) }
-    var play by remember { mutableStateOf(false) }
+fun MainScreen(viewModel: MainViewModel = koinViewModel()) {
+    val state by viewModel.state.collectAsStateWithLifecycle()
 
-    val songText = remember(play) {
-        if (play) "Song is playing"
-        else "Song is not playing"
-    }
+    val backstack = remember { mutableStateListOf<Any>(Route.Home) }
+    val status = state.session?.status ?: SessionStatus.Empty
+    val songName = state.session?.title ?: "Select a song to play"
+
+    val play = status == SessionStatus.Play
+    val progress = if (!play) 0.0f else 0.65f
 
     Scaffold (
         bottomBar = {
@@ -46,15 +45,15 @@ fun MainScreen() {
         },
         topBar = {
             TopSessionBar(
-                songName = songText,
-                progress = 0.6f
+                songName = songName,
+                progress = progress
             )
         },
         floatingActionButton = {
             ExpandableSessionControlFAB(
                 play = play,
-                onPlay = { play = true },
-                onPause = { play = false },
+                onPlay = { viewModel.resumeSession() },
+                onPause = { viewModel.pauseSession() },
                 onFastForward = {},
                 onFastBackward = {}
             )
