@@ -1,5 +1,6 @@
 package com.akzuza.moosik.screens.main
 
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -10,6 +11,7 @@ import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.text.font.FontFamily
@@ -23,7 +25,10 @@ import kotlin.time.Duration
 @Composable
 fun TopSessionBar(session: Session?) {
     val title = session?.title ?: "Select a song"
-    val progress = session?.getProgress() ?: 0.0f
+    val progress by animateFloatAsState(
+        targetValue = session?.getProgress() ?: 0.0f,
+        visibilityThreshold = 0.000001f
+    )
 
     Column (
         modifier = Modifier
