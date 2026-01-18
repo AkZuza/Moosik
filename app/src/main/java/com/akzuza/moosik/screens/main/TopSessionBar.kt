@@ -16,9 +16,13 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.akzuza.moosik.entities.Session
 
 @Composable
-fun TopSessionBar(songName: String, progress: Float) {
+fun TopSessionBar(session: Session?) {
+    val title = session?.title ?: "Select a song"
+    val progress = session?.getProgress() ?: 0.0f
+
     Column (
         modifier = Modifier
             .fillMaxWidth()
@@ -29,7 +33,7 @@ fun TopSessionBar(songName: String, progress: Float) {
     ) {
         Text(
             modifier = Modifier.offset(x = 8.dp),
-            text = songName,
+            text = title,
             fontWeight = FontWeight.SemiBold,
             fontFamily = FontFamily.Monospace
         )
@@ -46,8 +50,5 @@ fun TopSessionBar(songName: String, progress: Float) {
 @Preview(showBackground = true)
 @Composable
 fun TopSessionBarPreview() {
-    TopSessionBar(
-        "Random Song Name",
-        progress = 0.5f
-    )
+    TopSessionBar(session = null)
 }

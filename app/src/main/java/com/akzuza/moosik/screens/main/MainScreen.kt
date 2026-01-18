@@ -1,10 +1,12 @@
 package com.akzuza.moosik.screens.main
-
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
@@ -26,10 +28,7 @@ fun MainScreen(viewModel: MainViewModel = koinViewModel()) {
 
     val backstack = remember { mutableStateListOf<Any>(Route.Home) }
     val status = state.session?.status ?: SessionStatus.Empty
-    val songName = state.session?.title ?: "Select a song to play"
-
     val play = status == SessionStatus.Play
-    val progress = if (!play) 0.0f else 0.65f
 
     Scaffold (
         bottomBar = {
@@ -44,10 +43,7 @@ fun MainScreen(viewModel: MainViewModel = koinViewModel()) {
             )
         },
         topBar = {
-            TopSessionBar(
-                songName = songName,
-                progress = progress
-            )
+            TopSessionBar(session = state.session)
         },
         floatingActionButton = {
             ExpandableSessionControlFAB(
