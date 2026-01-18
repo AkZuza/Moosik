@@ -73,6 +73,33 @@ fun MainScreen(viewModel: MainViewModel = koinViewModel()) {
 
 @Preview
 @Composable
+private fun TestHomeView(
+    onStartSession: () -> Unit = {},
+    onResumeSession: () -> Unit = {},
+    onPauseSession: () -> Unit = {},
+    onRemoveSession: () -> Unit = {},
+) {
+    Column {
+        TextButton(
+            onClick = onStartSession
+        ) { Text("Start Session") }
+
+        TextButton(
+            onClick = onResumeSession
+        ) { Text("Resume Session") }
+
+        TextButton(
+            onClick = onPauseSession
+        ) { Text("Pause Session") }
+
+        TextButton(
+            onClick = onRemoveSession
+        ) { Text("Remove Session") }
+    }
+}
+
+@Preview
+@Composable
 fun MainScreenPreview() {
     MainScreen()
 }
