@@ -17,6 +17,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.akzuza.moosik.entities.Session
+import com.akzuza.moosik.entities.SessionStatus
+import kotlin.time.Duration
 
 @Composable
 fun TopSessionBar(session: Session?) {
@@ -50,5 +52,11 @@ fun TopSessionBar(session: Session?) {
 @Preview(showBackground = true)
 @Composable
 fun TopSessionBarPreview() {
-    TopSessionBar(session = null)
+    val session = Session(
+        title = "Random song title",
+        status = SessionStatus.Play,
+        elapsed = Duration.parse("10s"),
+        maxDuration = Duration.parse("30s")
+    )
+    TopSessionBar(session = session)
 }
