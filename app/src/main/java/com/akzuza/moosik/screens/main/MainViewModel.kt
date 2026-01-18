@@ -2,6 +2,7 @@ package com.akzuza.moosik.screens.main
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.akzuza.moosik.entities.Music
 import com.akzuza.moosik.entities.Session
 import com.akzuza.moosik.entities.SessionStatus
 import kotlinx.coroutines.Job
@@ -56,6 +57,12 @@ class MainViewModel : ViewModel() {
 
     fun updateSession() {
 
+    }
+
+    fun addMusicToQueue(newMusic: Music) {
+        _state.update {
+            it.copy(queue = it.queue + newMusic)
+        }
     }
 
     private fun startCountingElapsedDuration() {
