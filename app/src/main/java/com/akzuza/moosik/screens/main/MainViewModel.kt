@@ -16,12 +16,7 @@ import kotlin.time.ExperimentalTime
 import kotlin.time.TimeSource
 
 class MainViewModel : ViewModel() {
-    private var _state = MutableStateFlow(MainState(
-        session = Session(
-            status = SessionStatus.Pause,
-            maxDuration = Duration.parse("10s")
-        )
-    ))
+    private var _state = MutableStateFlow(MainState())
     val state: StateFlow<MainState> = _state
     private var job: Job = Job()
 
