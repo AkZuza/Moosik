@@ -258,6 +258,41 @@ private fun ExpandedSessionControlColumn(
     }
 }
 
+fun Modifier.enableDrag(
+    interactionSource: MutableInteractionSource,
+    onDrag: (Float) -> Unit,
+    scope: CoroutineScope
+): Modifier = this.pointerInput(Unit) {
+    var interaction: DragInteraction.Start? = null
+    detectDragGestures(
+        onDragStart = {
+            scope.launch {
+                interaction = DragInteraction.Start()
+                interaction.run {
+                    interactionSource.emit(this)
+                }
+            }
+        },
+        onDrag = { change: PointerInputChange, dragAmount ->
+            onDrag(dragAmount.x)
+        },
+        onDragCancel = {
+            scope.launch {
+                interaction?.run {
+                    interactionSource.emit(DragInteraction.Cancel(this))
+                }
+            }
+        },
+        onDragEnd = {
+            scope.launch {
+                interaction?.run {
+                    interactionSource.emit(DragInteraction.Stop(this))
+                }
+            }
+        }
+    )
+}
+
 @Preview
 @Composable
 fun PlayPauseButtonPreview() {
