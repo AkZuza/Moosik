@@ -89,6 +89,7 @@ fun ExpandableSessionControlFAB(
     ) {
         if (!openMenu) {
             PlayPauseButton(
+                modifier = buttonModifier,
                 play = play,
                 onClick = {
                     if (!openMenu) {
@@ -122,7 +123,7 @@ private fun PlayPauseButton(
     val displayIcon = if (play) Icons.Default.Pause else Icons.Default.PlayArrow
 
     IconButton(
-        modifier = buttonModifier,
+        modifier = modifier,
         colors = colors,
         shape = shape,
         onClick = onClick,
