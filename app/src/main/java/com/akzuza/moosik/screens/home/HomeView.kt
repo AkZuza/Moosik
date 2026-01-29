@@ -1,5 +1,6 @@
 package com.akzuza.moosik.screens.home
 
+import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -13,6 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.akzuza.moosik.data.OpenMultipleMusicFiles
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -23,11 +25,20 @@ fun HomeView(viewModel: HomeViewModel = koinViewModel()) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     val allMusic = state.allMusic
 
+    val launcher = rememberLauncherForActivityResult(
+        contract = OpenMultipleMusicFiles(),
+        onResult = { uris ->
+            viewModel.addMultipleMusicFiles(uris)
+        }
+    )
+
     Column (
         modifier = Modifier.fillMaxSize()
     ) {
         Button(
-            onClick = {  }
+            onClick = {
+
+            }
         ) {
             Text("Get All Music")
         }

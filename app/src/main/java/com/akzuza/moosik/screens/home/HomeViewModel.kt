@@ -2,6 +2,7 @@ package com.akzuza.moosik.screens.home
 
 import android.content.ContentResolver
 import android.content.ContentUris
+import android.net.Uri
 import android.provider.MediaStore
 import android.util.Log
 import androidx.lifecycle.ViewModel
@@ -15,7 +16,7 @@ class HomeViewModel : ViewModel() {
     private var _state = MutableStateFlow(HomeState())
     val state: StateFlow<HomeState> = _state;
 
-    fun openMusicPicker() {
+    fun addMultipleMusicFiles(uris: List<Uri>) {
 
     }
 
