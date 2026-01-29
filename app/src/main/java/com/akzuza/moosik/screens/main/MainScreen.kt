@@ -14,9 +14,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation3.runtime.entryProvider
-import androidx.navigation3.ui.NavDisplay
 import com.akzuza.moosik.entities.SessionStatus
+import com.akzuza.moosik.navigation.MainNavigation
 import com.akzuza.moosik.navigation.NavBar
 import com.akzuza.moosik.navigation.Route
 import org.koin.androidx.compose.koinViewModel
@@ -26,7 +25,7 @@ import org.koin.androidx.compose.koinViewModel
 fun MainScreen(viewModel: MainViewModel = koinViewModel()) {
     val state by viewModel.state.collectAsStateWithLifecycle()
 
-    val backstack = remember { mutableStateListOf<Any>(Route.Home) }
+    val backstack = remember { mutableStateListOf<Route>(Route.Home) }
     val status = state.session?.status ?: SessionStatus.Empty
     val play = status == SessionStatus.Play
 
@@ -35,7 +34,7 @@ fun MainScreen(viewModel: MainViewModel = koinViewModel()) {
             NavBar(
                 modifier = Modifier.fillMaxWidth(),
                 destinations = listOf(Route.Home, Route.Playlist()),
-                selectedDestination = backstack.last() as Route,
+                selectedDestination = backstack.last(),
                 onChangeDestination = {
                     backstack.removeLastOrNull()
                     backstack.add(it)
@@ -55,14 +54,10 @@ fun MainScreen(viewModel: MainViewModel = koinViewModel()) {
             )
         }
     ) { innerPadding ->
-        NavDisplay (
+        MainNavigation (
             modifier = Modifier.fillMaxSize().padding(innerPadding),
-            backStack = backstack,
+            backstack = backstack,
             onBack = { backstack.removeLastOrNull() },
-            entryProvider = entryProvider {
-                entry<Route.Home> {  }
-                entry<Route.Playlist> {  }
-            }
         )
     }
 }
