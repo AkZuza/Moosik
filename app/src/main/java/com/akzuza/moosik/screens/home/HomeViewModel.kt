@@ -6,18 +6,69 @@ import android.net.Uri
 import android.provider.MediaStore
 import android.util.Log
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.akzuza.moosik.entities.Music
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 
-class HomeViewModel : ViewModel() {
+class HomeViewModel(private val contentResolver: ContentResolver) : ViewModel() {
 
     private var _state = MutableStateFlow(HomeState())
     val state: StateFlow<HomeState> = _state;
 
     fun addMultipleMusicFiles(uris: List<Uri>) {
+        viewModelScope.launch {
+            val musicList = mutableListOf<Music>()
+            for (uri in uris) {
+                // add index here for testing delete operation, to be removed
+                // id is index here
+                val newIndex = state.value.allMusic.size + musicList.size
+                val music = getMusicFromUri(uri)
+                music?.let { musicList.add(it.copy(id = newIndex)) }
+            }
 
+            _state.update {
+                it.copy(
+                    allMusic = it.allMusic + musicList
+                )
+            }
+        }
+    }
+
+    suspend fun getMusicFromUri(uri: Uri): Music? {
+        val cursor = contentResolver.query(uri, null, null, null, null)
+        val music = cursor?.use { cursor ->
+            try {
+                if (cursor.moveToNext()) {
+                    val displayName = cursor.getString(
+                        cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DISPLAY_NAME)
+                    )
+
+//                    val duration = cursor.getInt(
+//                        cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DURATION)
+//                    )
+//
+//                    val album = cursor.getString(
+//                        cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.ALBUM)
+//                    )
+
+                    return@use Music(
+                        title = displayName,
+                        album = "No album, fix",
+                        totalDurationMs = 0
+                    )
+                } else {
+                    return null
+                }
+            } catch (err: Exception) {
+                Log.d("Error", "getMusicFromUri: $err")
+                return null
+            }
+        }
+
+        return music
     }
 
     private fun mediaStoreGetMusic(contentResolver: ContentResolver) {

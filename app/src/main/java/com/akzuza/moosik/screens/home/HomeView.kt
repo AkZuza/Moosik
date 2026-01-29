@@ -1,6 +1,8 @@
 package com.akzuza.moosik.screens.home
 
 import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -11,7 +13,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.akzuza.moosik.data.OpenMultipleMusicFiles
@@ -19,8 +20,6 @@ import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun HomeView(viewModel: HomeViewModel = koinViewModel()) {
-    val context = LocalContext.current
-    val contentResolver = context.contentResolver
 
     val state by viewModel.state.collectAsStateWithLifecycle()
     val allMusic = state.allMusic
@@ -37,7 +36,7 @@ fun HomeView(viewModel: HomeViewModel = koinViewModel()) {
     ) {
         Button(
             onClick = {
-
+                launcher.launch(arrayOf("audio/*"))
             }
         ) {
             Text("Get All Music")
